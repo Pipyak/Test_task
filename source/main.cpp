@@ -2,8 +2,8 @@
 #include <ctime>
 #define MIL 1000000
 
-//создание шаблона функции простого скользящего среднего
-//для работы с двумя типами данных
+//creating template for simple moving average function
+//for work with 2 datatypes
 template <typename T> 
 void SimpleMovingAverage(T *input, T *output, int window) {
 	double middle = 0;
@@ -27,17 +27,18 @@ int main() {
 	double input1[MIL], output1[MIL];
 	float input2[MIL], output2[MIL];
 
-	//заполнение входных массивов случайными значениями
+	//full input massives with random numbera
 	srand(time(0));
 	for (int i = 0; i < MIL; i++) {
 		input1[i] = rand() % 100;
 		input2[i] = rand() % 100;
 
+		//creating digits of float and double type
 		(double)input1[i] /= rand() % 100;
 		(float)input2[i] /= rand() % 100;
 	}
 	
-	//вывод информации в консоль
+	//output values in console
 	for (int i = window, name=1; i <= 128; i *= 2) {
 		std::cout << "Massive " << name++ << ':' << std::endl;
 		SimpleMovingAverage(input1, output1, window);
