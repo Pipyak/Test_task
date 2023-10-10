@@ -1,8 +1,11 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <ctime>
 #include <chrono>
 
+using std::chrono::duration_cast;
+using std::chrono::microseconds;
 const int MIL = 1000000;
 
 //using vector for not have stack overflow
@@ -10,6 +13,9 @@ std::vector<double>input1;
 std::vector<double>output1;
 std::vector<float>input2;
 std::vector<float>output2;
+
+std::vector<std::chrono::duration<long long, std::nano>>res;
+
 
 //creating template for simple moving average function
 //for work with 2 datatypes
@@ -36,8 +42,10 @@ void SimpleMovingAverage(T input, T output, int window) {
 		std::cout << output[i] << std::endl;
 	}*/
 
-	std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() << " microsec";
+	std::cout << duration_cast<microseconds>(result).count() << " microsec";
 	std::cout<<'\n';
+
+	res.push_back(result);
  }
 
 int main() {
@@ -64,7 +72,7 @@ int main() {
 	}
 	
 	//output values in console
-	for (int i = window, name=1; i <= 128; i *= 2) {
+	for (int i = window; i <= 128; i *= 2) {
 		std::cout << "Window is " << i << " and type is double:";
 		SimpleMovingAverage(input1, output1, i);
 		std::cout<<std::endl;
@@ -73,5 +81,16 @@ int main() {
 		std::cout << std::endl;
 	}
 	
+	//file output for import data in Excel
+	std::ofstream fout;
+	fout.open("result_file_to_Excel.txt");
+
+	for (int i = 0; i <12; i+=2) {
+		fout << duration_cast<microseconds>(res[i]).count()* 0.000001 << ' ';
+	}
+	fout << std::endl;
+	for (int i = 1; i < 12; i += 2) {
+		fout << duration_cast<microseconds>(res[i]).count() * 0.000001 << ' ';
+	}
 	return 0;
 }
